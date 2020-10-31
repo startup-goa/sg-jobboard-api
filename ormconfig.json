@@ -1,0 +1,64 @@
+[{
+        "name": "pgdev",
+        "type": "postgres",
+        "host": "db-startup-goa-do-user-8243538-0.b.db.ondigitalocean.com",
+        "port": 25060,
+        "username": "doadmin",
+        "password": "m7hsxy55v5566t2d",
+        "database": "startupgoaportal",
+        "synchronize": false,
+        "logging": false,
+        "entities": [
+            "src/entity/**/*.ts"
+        ],
+        "migrations": [
+            "src/migration/**/*.ts"
+        ],
+        "subscribers": [
+            "src/subscriber/**/*.ts"
+        ],
+        "cli": {
+            "entitiesDir": "src/entity",
+            "migrationsDir": "src/migration",
+            "subscribersDir": "src/subscriber"
+        },
+        "extra": {
+            "connectionLimit": 150
+        },
+        "ssl": {
+            "rejectUnauthorized": false,
+            "ca": "ca-certificate_2.crt"
+        }
+    },
+    {
+        "name": "pgprod",
+        "type": "postgres",
+        "host": "db-startup-goa-do-user-8243538-0.b.db.ondigitalocean.com",
+        "port": 25060,
+        "username": "doadmin",
+        "password": "m7hsxy55v5566t2d",
+        "database": "startupgoaportal",
+        "synchronize": false,
+        "logging": false,
+        "entities": [
+            "build/entity/**/*.js"
+        ],
+        "migrations": [
+            "build/migration/**/*.js"
+        ],
+        "subscribers": [
+            "build/subscriber/**/*.js"
+        ],
+        "cli": {
+            "entitiesDir": "build/entity",
+            "migrationsDir": "build/migration",
+            "subscribersDir": "build/subscriber"
+        },
+        "extra": {
+            "connectionLimit": 150
+        },
+        "ssl": {
+            "ca": "ca-certificate_2.crt"
+        }
+    }
+]
