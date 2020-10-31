@@ -1,5 +1,5 @@
 [{
-        "name": "pgdev",
+        "name": "default",
         "type": "postgres",
         "host": "db-startup-goa-do-user-8243538-0.b.db.ondigitalocean.com",
         "port": 25060,

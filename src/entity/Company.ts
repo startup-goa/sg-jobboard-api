@@ -1,23 +1,44 @@
-/* import {Entity, 
+import {Entity, 
     PrimaryGeneratedColumn, 
     Column,
     OneToOne,
     JoinColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,BeforeUpdate, BeforeInsert} from "typeorm";
-
+    ManyToOne,BeforeUpdate, BeforeInsert, OneToMany} from "typeorm";
+import { JobApplication } from "./JobApplication";
 @Entity()
 export class Company {
 
-    @PrimaryGeneratedColumn({type:"bigint"})
-    comp_id: bigint;
+    @PrimaryGeneratedColumn()
+    compId: number;
 
     @Column({type: "varchar", length: 200, unique: true ,nullable: false})
-    user_name: string;
+    companyName: string;
 
-    @Column({type: "varchar", length: 200})
-    display_name: string;
+    @Column({type:"varchar",length:15})
+    phoneNumber: string;
+
+    @Column({type:"varchar",length:1000, nullable: true})
+    tagline: string;
+
+    @Column({type:"varchar",length:1000, nullable: true})
+    description: string;
+
+    @Column({type:"varchar",length:1000, nullable: true})
+    video: string;
+    
+    @Column({type:"varchar",length:1000, nullable: true})
+    website: string;
+    
+    @Column({type:"varchar",length:1000, nullable: true})
+    facebookPage: string;
+
+    @Column({type:"varchar",length:1000, nullable: true})
+    linkedinPage: string;
+    
+    @Column({type:"varchar",length:1000,nullable: true})
+    logo: string;
 
     @Column({type: "varchar", length: 500,nullable: false})
     password: string;
@@ -25,12 +46,15 @@ export class Company {
     @Column({type: "boolean",default:true})
     active: boolean;
 
-    @Column({type:"varchar",length:15})
-    phone_number: string;
-    @Column({type:"bigint" ,nullable: true})
+    @Column({type: "boolean",default:false})
+    approved: boolean;
 
     @Column({type:"timestamp",default: ()=>"CURRENT_TIMESTAMP"})
-    password_update_time: Date;
+    passwordPpdate_time: Date;
+
+    @OneToMany(type => JobApplication,aobApplication => aobApplication.company)
+    jobApplications: JobApplication[];
+
 
     @CreateDateColumn()
     createdDate: Date;
@@ -38,4 +62,3 @@ export class Company {
     @UpdateDateColumn()
     updatedDate: Date;
 }
- */
