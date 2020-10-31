@@ -4,9 +4,6 @@ export class TokenPayload {
     public user_name: string;
     public user_phone: string;
     public createdDate: Date;
-    constructor() {
-
-    }
     static createInstance(user_id: bigint,
         user_name: string,
         user_phone: string,
