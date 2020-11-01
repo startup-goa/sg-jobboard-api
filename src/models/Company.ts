@@ -275,12 +275,12 @@ export class CompanyModel {
         await connection.createEntityManager().insert(Applications, applicationobj);
         return applicationobj;
     }
-    async getJobApplications(jobId: bigint, pageno: number = 1, perpage: number = 20) {
+    async getJobApplications(compId: number,jobId: bigint, pageno: number = 1, perpage: number = 20) {
         const connection = getConnection(connectionName);
         const records =  await connection.getRepository(Applications).createQueryBuilder("appl")
         .innerJoinAndSelect("appl.jobApplication","jobApplication")
-            .where("appl.jobId = :jobId", { jobId })
-            .skip((pageno - 1))
+            .where("appl.jobId = :jobId and jobApplication.compId = :compId", { jobId,compId })
+            .skip((pageno - 1)*perpage)
             .take(perpage)
             .getMany();
         for(const record of records){

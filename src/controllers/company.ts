@@ -137,14 +137,17 @@ router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Resp
         res.send("Something went wrong");
     }
 });
-router.get("/job/applications/:jobid" ,async (req: any, res: express.Response) => {
-   
+router.get("/job/applications/:jobid" ,auth,async (req: any, res: express.Response) => {
+    const compId = req.user["compId"] as number;
     const companymodel = new CompanyModel();
+    const pageno = req.query.pageno || 1;
+    const perpage = req.query.perpage || 20;
     try {
         const applications =  await companymodel.getJobApplications(
+            compId,
             req.params.jobid,
-            req.query.pageno || 1,
-            req.query.perpage || 20
+            pageno,
+            perpage
         );
         res.send({
             applications
