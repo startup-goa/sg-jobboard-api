@@ -16,9 +16,23 @@ router.get("/", function (req, res) {
 router.post("/login",
     async (req: express.Request, res: express.Response) => {
 
-        const auth: Auth = new Auth(req.body.username, req.body.password);
+        
         try {
+            const auth: Auth = new Auth(req.body.username, req.body.password);
+            const companyobj = await auth.login();
+            delete companyobj.password;
+            delete companyobj.passwordPpdate_time;;
 
+            const token = await auth.getToken(companyobj);
+            if (token == null) {
+                res.status(500).send("Token generation failed");
+            } else {
+                
+                res.status(200).send({
+                    token: token,
+                    company: companyobj
+                });
+            }
         } catch (err) {
             res.status(500).send({ error: "some error" });
         }

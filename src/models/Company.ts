@@ -4,6 +4,7 @@ import bcrypt = require("bcrypt");
 import { JobApplication } from "../entity/JobApplication";
 import { Applications } from "../entity/Applications";
 import { query } from "express-validator";
+import * as path from "path";
 const saltRounds = 10;
 const connectionName = process.env.DB_COMMECTION_NAME;
 export class CompanyModel {
@@ -39,6 +40,19 @@ export class CompanyModel {
     async getCompany(compId: number) {
         return this.getAllCompaniesWithJobCount(compId, 1, 1);
 
+    }
+    async getCompanyByuserName(compUserName: string) {
+        const connection = getConnection(connectionName);
+        const compObject = await connection.getRepository(Company)
+        .findOne({
+            where: {
+                companyName: compUserName
+            }
+        });
+        if(compObject.logo){
+            compObject.logo = path.join(process.env.BASE_URL,"companylogo",compObject.logo);
+        }
+        return compObject;
     }
     async getJobs(compId: number, approved: boolean, type: number, pageno: number, perpage: number) {
         const connection = getConnection(connectionName);
