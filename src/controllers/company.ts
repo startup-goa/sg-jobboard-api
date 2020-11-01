@@ -70,7 +70,7 @@ router.get("/jobs/:compid", async (req, res) => {
         res.send({
             jobsList
         });
-    } catch (err) {
+    } catch (err) {console.log(err);
         res.send("Something went wrong");
     }
 });

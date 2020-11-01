@@ -40,14 +40,14 @@ export class CompanyModel {
     async getCompany(compId: number) {
         const connection = getConnection(connectionName);
         const compObject = await connection.getRepository(Company)
-        .findOne({
-            where: {
-                compId
-                
-            }
-        });
-        if(compObject.logo){
-            compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
+            .findOne({
+                where: {
+                    compId
+
+                }
+            });
+        if (compObject.logo) {
+            compObject.logo = path.join(process.env.BASE_URL, "company/logo", compObject.logo);
         }
         return compObject;
         // return this.getAllCompaniesWithJobCount(compId, 1, 1);
@@ -56,13 +56,13 @@ export class CompanyModel {
     async getCompanyByuserName(compUserName: string) {
         const connection = getConnection(connectionName);
         const compObject = await connection.getRepository(Company)
-        .findOne({
-            where: {
-                companyName: compUserName
-            }
-        });
-        if(compObject.logo){
-            compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
+            .findOne({
+                where: {
+                    companyName: compUserName
+                }
+            });
+        if (compObject.logo) {
+            compObject.logo = path.join(process.env.BASE_URL, "company/logo", compObject.logo);
         }
         return compObject;
     }
@@ -70,7 +70,22 @@ export class CompanyModel {
         const connection = getConnection(connectionName);
 
         const queryB = connection.getRepository(JobApplication)
-            .createQueryBuilder("jobapplication");
+            .createQueryBuilder("jobapplication")
+            .select([
+                "jobapplication.jobId as jobId",
+                "jobapplication.compId as compId",
+                "jobapplication.jobTitle as jobTitle" ,
+                "jobapplication.location as location",
+                "jobapplication.region as region",
+                "jobapplication.type as type",
+                "jobapplication.category as category",
+                "jobapplication.active as active",
+                "jobapplication.phoneNumber as phoneNumber",
+                "jobapplication.description as description",
+                "jobapplication.salarymin as salarymin",
+                "jobapplication.salarymax as salarymax",
+                "jobapplication.approved as approved"
+            ]);
         if (compId) {
             queryB.andWhere("jobapplication.compId = :compId", { compId });
         }
@@ -86,11 +101,9 @@ export class CompanyModel {
             .createQueryBuilder()
             .from("(" + queryB.getQuery() + ")", "jobapplication")
             .setParameters(queryB.getParameters())
-            .leftJoinAndSelect(Applications,"applications", "applications.jobId = jobapplication.jobId")
+            // .leftJoinAndSelect(Applications, "applications", "applications.jobId = jobapplication.jobId")
             .select([
                 "jobapplication.jobId",
-                "jobapplication.compId",
-                "jobapplication.company",
                 "jobapplication.jobTitle",
                 "jobapplication.location",
                 "jobapplication.region",
@@ -102,32 +115,33 @@ export class CompanyModel {
                 "jobapplication.salarymin",
                 "jobapplication.salarymax",
                 "jobapplication.approved",
-                "sum(applications.applicantemail) as total_applications",
+                // "count(applications.applicantemail) as total_applications",
             ])
+            // .groupBy("jobapplication.jobId")
             .getRawMany();
 
     }
     async getAllCompanies(pageno: number, perpage: number, approved: boolean) {
         const connection = getConnection(connectionName);
         const query = connection.getRepository(Company)
-        .createQueryBuilder("company");
-        if(approved !== undefined){
-        console.log("approved: ",approved);
+            .createQueryBuilder("company");
+        if (approved !== undefined) {
+            console.log("approved: ", approved);
 
             query.where(
-                "company.approved = :approved",{approved}
+                "company.approved = :approved", { approved }
             );
         }
         const records = await query.getMany();
-        for(const compObject of records ){
-            if(compObject.logo){
-                compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
+        for (const compObject of records) {
+            if (compObject.logo) {
+                compObject.logo = path.join(process.env.BASE_URL, "company/logo", compObject.logo);
             }
             delete compObject.password;
             delete compObject.passwordPpdate_time;
 
         }
-        console.log("query: ",records);
+        console.log("query: ", records);
 
         return records;
 
