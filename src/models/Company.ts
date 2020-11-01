@@ -258,4 +258,21 @@ export class CompanyModel {
         const connection = getConnection(connectionName);
         await connection.createEntityManager().update(Company, { compId }, { approved: true });
     }
+    async applyForJob(
+        jobId: bigint,
+        applicantemail: string,
+        cvPath: string,
+        applicantmessage: string,
+        applicantfullName: string
+    ) {
+        const applicationobj = new Applications();
+        applicationobj.jobId = jobId;
+        applicationobj.applicantemail = applicantemail;
+        applicationobj.cvPath = cvPath;
+        applicationobj.applicantmessage = applicantmessage;
+        applicationobj.applicantfullName = applicantfullName;
+        const connection = getConnection(connectionName);
+        await connection.createEntityManager().insert(Applications,applicationobj);
+        return applicationobj;
+    }
 }

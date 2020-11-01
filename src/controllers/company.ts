@@ -7,9 +7,10 @@ import path = require("path");
 import * as bodyParser from "body-parser";
 import * as fs from "fs";
 const appDir = path.dirname(require.main.filename);
-const upload = multer({ dest: path.join(appDir, "/logos") });
+const upload = multer({ dest: path.join(appDir, "/cvs") });
 const router = express.Router();
-const logoDirectory = path.join(appDir, "/logos");
+const logoDirectory = path.join(appDir, "/cvs");
+
 // get all companies which are approved or not approved or both
 router.get("/", async (req, res) => {
     const pageno = 1;
@@ -94,6 +95,30 @@ router.post("/job",auth ,async (req: any, res: express.Response) => {
         );
         res.send({
             job: jobobject
+        });
+    } catch (err) {
+        res.send("Something went wrong");
+    }
+});
+router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Response) => {
+    
+    const companymodel = new CompanyModel();
+    let filecv;
+        if (req.file) {
+            filecv = req.file.filename;
+        }
+
+    try {
+        
+        const jobobject =  await companymodel.applyForJob(
+            req.body.jobId,
+            req.body.email,
+            filecv,
+            req.body.message,
+            req.body.fullname
+        );
+        res.send({
+            applicationDetails: jobobject
         });
     } catch (err) {
         res.send("Something went wrong");
