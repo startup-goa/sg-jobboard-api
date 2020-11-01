@@ -34,22 +34,14 @@ export class Auth{
         };
         return jwt.sign(payload, privateKey, { algorithm: "RS256" , expiresIn: 60 * 60 * 24 * 365 });
     }
-    // getToken(user: Muser){
-    //     const privateKey = jwtKeyPrivate;
-    //     const payload = {
-    //         userId : user.user_id,
-    //     };
-    //     return jwt.sign(payload, privateKey, { algorithm: "RS256" , expiresIn: 60 * 60 * 24 * 365 });
-    // }
-
-    // static verifyToken(token: string){
-    //     // verify a token symmetric - synchronous
-    //     try{
-    //         const decoded: TokenPayload = (jwt.verify(token, jwtKeyPublic) as TokenPayload);    
-    //         return decoded; 
-    //     }catch(err){
-    //         return null; 
-    //     }
+    static verifyToken(token: string){
+        // verify a token symmetric - synchronous
+        try{
+            const decoded: TokenPayload = (jwt.verify(token, jwtKeyPublic) as TokenPayload);    
+            return decoded; 
+        }catch(err){
+            return null; 
+        }
         
-    // }
+    }
 }

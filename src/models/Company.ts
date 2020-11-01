@@ -50,7 +50,7 @@ export class CompanyModel {
             }
         });
         if(compObject.logo){
-            compObject.logo = path.join(process.env.BASE_URL,"companylogo",compObject.logo);
+            compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
         }
         return compObject;
     }
@@ -97,16 +97,25 @@ export class CompanyModel {
     }
     async getAllCompanies(pageno: number, perpage: number, approved: boolean) {
         const connection = getConnection(connectionName);
-        return await connection.getRepository(Company)
-            .find({
-                where: {
-                    ...(() => {
-                        return (approved !== undefined) ? { approved } : null;
-                    })()
-                },
-                skip: (pageno - 1) * perpage,
-                take: perpage
-            });
+        const query = connection.getRepository(Company)
+        .createQueryBuilder("company");
+        console.log("approved: ",approved);
+        if(approved !== undefined){
+            query.where(
+                "company.approved = :approved",{approved}
+            );
+        }
+        const records = await query.getMany();
+        for(const compObject of records ){
+            if(compObject.logo){
+                compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
+            }
+            delete compObject.password;
+            delete compObject.passwordPpdate_time;
+
+        }
+        return records;
+
     }
     async getAllCompaniesWithJobCount(compId: number, pageno: number, perpage: number) {
         const finalresutls: { [key: number]: Record<string, any> } = {};
@@ -193,5 +202,12 @@ export class CompanyModel {
         const connection = getConnection(connectionName);
         await connection.createEntityManager().update(Company, { compId }, { active: false });
     }
-
+    async enablecompany(compId: number) {
+        const connection = getConnection(connectionName);
+        await connection.createEntityManager().update(Company, { compId }, { active: true });
+    }
+    async approveCompany(compId: number) {
+        const connection = getConnection(connectionName);
+        await connection.createEntityManager().update(Company, { compId }, { approved: true });
+    }
 }
