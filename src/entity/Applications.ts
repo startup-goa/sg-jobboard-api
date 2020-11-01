@@ -16,19 +16,26 @@ export class Applications {
     @PrimaryColumn({type:"bigint"})
     jobId: bigint;
 
-    @PrimaryColumn({type:"bigint"})
-    applicantId: bigint;
+    @PrimaryColumn({type: "varchar",length: 150})
+    applicantemail: string;
 
-    @ManyToOne(type => JobApplication,{primary: true})
+    @ManyToOne(type => JobApplication,jobapplication =>jobapplication.applications, {primary: true})
     @JoinColumn({name: "jobId"})
     jobApplication: JobApplication;
 
-    @ManyToOne(type => Applicant,{primary: true})
-    @JoinColumn({name: "applicantId"})
-    applicant: Applicant;
 
+    @Column({type: "varchar", length: 1000,nullable: false})
+    cvPath: string;
+    
     @Column({type: "boolean",default:true})
     active: boolean;
+
+    @Column({type: "varchar", length: 1000,nullable: true})
+    applicantmessage: string;
+
+    @Column({type: "varchar", length: 500,nullable: true})
+    applicantfullName: string;
+
 
     @CreateDateColumn()
     createdDate: Date;

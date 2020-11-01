@@ -5,8 +5,9 @@ import {Entity,
     JoinColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,BeforeUpdate, BeforeInsert} from "typeorm";
+    ManyToOne,BeforeUpdate, BeforeInsert, OneToMany} from "typeorm";
 import {Company} from "./Company";
+import { Applications } from "./Applications";
 // Job applications created by user
 @Entity()
 export class JobApplication {
@@ -29,8 +30,8 @@ export class JobApplication {
     @Column({type: "varchar", length: 500,nullable: true})
     region: string;
 
-    @Column({type: "varchar", length: 500,nullable: true})
-    type: string;
+    @Column({type: "integer"})
+    type: number;
 
     @Column({type: "varchar", length: 500,nullable: true})
     category: string;
@@ -51,6 +52,11 @@ export class JobApplication {
 
     @Column({type: "boolean",default:false})
     approved: boolean;
+
+    @OneToMany(type => Applications,applications => applications.jobApplication)
+    applications: Applications[];
+
+
 
     @CreateDateColumn()
     createdDate: Date;
