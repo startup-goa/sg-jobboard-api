@@ -26,6 +26,24 @@ router.get("/", async (req, res) => {
         res.status(500).send("Something went wrong");
     }
 });
+router.get("/:compId", async (req, res) => {
+    const pageno = 1;
+    const approved = true;
+    const companymodel = new CompanyModel();
+    try {
+        const companyObj = await companymodel.getCompany(
+           req.params.compId as any as number
+        );console.log("companyList: ");
+        delete companyObj.password;
+        delete companyObj.passwordPpdate_time;
+
+        res.send({
+            "company": companyObj
+        });
+    } catch (err) {
+        res.status(500).send("Something went wrong");
+    }
+});
 router.get("/logo/:filename", async (req, res) => {
     const filename = req.params.filename;
     const companymodel = new CompanyModel();

@@ -38,7 +38,19 @@ export class CompanyModel {
         return await connection.createEntityManager().insert(Company, companyObj);
     }
     async getCompany(compId: number) {
-        return this.getAllCompaniesWithJobCount(compId, 1, 1);
+        const connection = getConnection(connectionName);
+        const compObject = await connection.getRepository(Company)
+        .findOne({
+            where: {
+                compId
+                
+            }
+        });
+        if(compObject.logo){
+            compObject.logo = path.join(process.env.BASE_URL,"company/logo",compObject.logo);
+        }
+        return compObject;
+        // return this.getAllCompaniesWithJobCount(compId, 1, 1);
 
     }
     async getCompanyByuserName(compUserName: string) {
