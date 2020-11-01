@@ -30,7 +30,7 @@ router.get("/", async (req, res) => {
 });
 router.get("/jobs/:compid?", async (req, res) => {
     const pageno = req.query.pageno || 1;
-    const perpage = req.query.pageno || 20;
+    const perpage = req.query.perpage || 20;
     const approved = true;
     const compid = req.params.compid ?  req.params.compid as any as number : undefined;
     const type = req.query.type;
