@@ -28,6 +28,27 @@ router.get("/", async (req, res) => {
         res.status(500).send("Something went wrong");
     }
 });
+router.get("/jobs/:compid?", async (req, res) => {
+    const pageno = req.query.pageno || 1;
+    const perpage = req.query.pageno || 20;
+    const approved = true;
+    const compid = req.params.compid ?  req.params.compid as any as number : undefined;
+    const type = req.query.type;
+    const companymodel = new CompanyModel();
+    try {
+        const jobsList = await companymodel.getJobs(
+            compid,
+            approved,
+            type,
+            pageno,perpage
+        );
+        res.send({
+            jobsList
+        });
+    } catch (err) {console.log(err);
+        res.send("Something went wrong");
+    }
+});
 router.get("/:compId", async (req, res) => {
     const pageno = 1;
     const approved = true;
@@ -66,26 +87,7 @@ router.get("/cv/:filename", async (req, res) => {
         res.status(404).send("not found");
     }
 });
-router.get("/jobs/:compid", async (req, res) => {
-    const pageno = 1;
-    const approved = true;
-    const compid = req.params.compid as any as number;
-    const type = req.query.type;
-    const companymodel = new CompanyModel();
-    try {
-        const jobsList = await companymodel.getJobs(
-            compid,
-            approved,
-            type,
-            1,10000
-        );
-        res.send({
-            jobsList
-        });
-    } catch (err) {console.log(err);
-        res.send("Something went wrong");
-    }
-});
+
 
 router.post("/job",auth ,async (req: any, res: express.Response) => {
     const compId = req.user["compId"] as number;
@@ -130,6 +132,30 @@ router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Resp
         );
         res.send({
             applicationDetails: jobobject
+        });
+    } catch (err) {
+        res.send("Something went wrong");
+    }
+});
+router.post("/job/applications/:jobid",auth ,async (req: any, res: express.Response) => {
+    const compId = req.user["compId"] as number;
+    const type = req.query.type;
+    const companymodel = new CompanyModel();
+    try {
+        const jobobject =  await companymodel.assignJobsToCompany(
+            compId,
+            req.body.title,
+            req.body.location,
+            req.body.region,
+            req.body.type,
+            req.body.category,
+            req.body.phonenumber,
+            req.body.desc,
+            req.body.salarymin,
+            req.body.salarymax
+        );
+        res.send({
+            job: jobobject
         });
     } catch (err) {
         res.send("Something went wrong");
