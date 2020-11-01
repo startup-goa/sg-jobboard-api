@@ -9,6 +9,7 @@ const connectionName = process.env.DB_COMMECTION_NAME;
 export class CompanyModel {
     async createCompany(
         companyName: string,
+        companyDispName: string,
         phoneNumber: string,
         tagline: string,
         description: string,
@@ -22,6 +23,7 @@ export class CompanyModel {
         const connection = getConnection(connectionName);
         const companyObj = new Company();
         companyObj.companyName = companyName;
+        companyObj.companyDispName = companyDispName;
         companyObj.phoneNumber = phoneNumber;
         companyObj.tagline = tagline;
         companyObj.description = description;

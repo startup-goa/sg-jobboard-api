@@ -16,6 +16,9 @@ export class Company {
     @Column({type: "varchar", length: 200, unique: true ,nullable: false})
     companyName: string;
 
+    @Column({type: "varchar", length: 200, unique: true ,nullable: false})
+    companyDispName: string;
+
     @Column({type:"varchar",length:15})
     phoneNumber: string;
 
