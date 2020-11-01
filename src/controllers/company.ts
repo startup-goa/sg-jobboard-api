@@ -137,25 +137,17 @@ router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Resp
         res.send("Something went wrong");
     }
 });
-router.post("/job/applications/:jobid",auth ,async (req: any, res: express.Response) => {
-    const compId = req.user["compId"] as number;
-    const type = req.query.type;
+router.get("/job/applications/:jobid" ,async (req: any, res: express.Response) => {
+   
     const companymodel = new CompanyModel();
     try {
-        const jobobject =  await companymodel.assignJobsToCompany(
-            compId,
-            req.body.title,
-            req.body.location,
-            req.body.region,
-            req.body.type,
-            req.body.category,
-            req.body.phonenumber,
-            req.body.desc,
-            req.body.salarymin,
-            req.body.salarymax
+        const applications =  await companymodel.getJobApplications(
+            req.params.jobid,
+            req.query.pageno || 1,
+            req.query.perpage || 20
         );
         res.send({
-            job: jobobject
+            applications
         });
     } catch (err) {
         res.send("Something went wrong");

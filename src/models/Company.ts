@@ -272,7 +272,20 @@ export class CompanyModel {
         applicationobj.applicantmessage = applicantmessage;
         applicationobj.applicantfullName = applicantfullName;
         const connection = getConnection(connectionName);
-        await connection.createEntityManager().insert(Applications,applicationobj);
+        await connection.createEntityManager().insert(Applications, applicationobj);
         return applicationobj;
+    }
+    async getJobApplications(jobId: bigint, pageno: number = 1, perpage: number = 20) {
+        const connection = getConnection(connectionName);
+        const records =  await connection.getRepository(Applications).createQueryBuilder("appl")
+        .innerJoinAndSelect("appl.jobApplication","jobApplication")
+            .where("appl.jobId = :jobId", { jobId })
+            .skip((pageno - 1))
+            .take(perpage)
+            .getMany();
+        for(const record of records){
+            record.cvPath = path.join(process.env.BASE_URL, "company/cv", record.cvPath);
+        }
+        return records;
     }
 }
