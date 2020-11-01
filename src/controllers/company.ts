@@ -18,12 +18,12 @@ router.get("/", async (req, res) => {
     try {
         const companyList = await companymodel.getAllCompanies(
             1, 1, approved
-        );
+        );console.log("companyList: ",companyList);
         res.send({
             companyList
         });
     } catch (err) {
-        res.send("Something went wrong");
+        res.status(500).send("Something went wrong");
     }
 });
 router.get("/logo/:filename", async (req, res) => {
@@ -51,6 +51,31 @@ router.get("/jobs/:compid", async (req, res) => {
         );
         res.send({
             jobsList
+        });
+    } catch (err) {
+        res.send("Something went wrong");
+    }
+});
+
+router.post("/job",auth ,async (req: any, res: express.Response) => {
+    const compId = req.user["compId"] as number;
+    const type = req.query.type;
+    const companymodel = new CompanyModel();
+    try {
+        const jobobject =  await companymodel.assignJobsToCompany(
+            compId,
+            req.body.title,
+            req.body.location,
+            req.body.region,
+            req.body.type,
+            req.body.category,
+            req.body.phonenumber,
+            req.body.desc,
+            req.body.salarymin,
+            req.body.salarymax
+        );
+        res.send({
+            job: jobobject
         });
     } catch (err) {
         res.send("Something went wrong");

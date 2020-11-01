@@ -11,10 +11,10 @@ const router = express.Router();
 // get all companies which are approved or not approved or both
 router.get("/", async (req, res) => {
     const pageno = 1;
-    const approved = req.query.approved;
+    const approved = req.query.approved as boolean;
     const companymodel = new CompanyModel();
     try {
-        const companyList = companymodel.getAllCompanies(
+        const companyList = await companymodel.getAllCompanies(
             1, 1, approved
         );
         res.send({
@@ -26,7 +26,7 @@ router.get("/", async (req, res) => {
 });
 router.get("/jobs/:compid", async (req, res) => {
     const pageno = 1;
-    const approved = req.query.approved;
+    const approved = req.query.approved as boolean ;
     const compid = req.params.compid as any as number;
     const type = req.query.type;
     const companymodel = new CompanyModel();

@@ -36,11 +36,12 @@ export class Auth{
     }
     static verifyToken(token: string){
         // verify a token symmetric - synchronous
-        try{
+        try{console.log("token: ",token);
             const decoded: TokenPayload = (jwt.verify(token, jwtKeyPublic) as TokenPayload);    
+            console.log("decoded: ",decoded);
             return decoded; 
         }catch(err){
-            return null; 
+            console.log("token invalid ");
         }
         
     }

@@ -99,8 +99,9 @@ export class CompanyModel {
         const connection = getConnection(connectionName);
         const query = connection.getRepository(Company)
         .createQueryBuilder("company");
-        console.log("approved: ",approved);
         if(approved !== undefined){
+        console.log("approved: ",approved);
+
             query.where(
                 "company.approved = :approved",{approved}
             );
@@ -114,6 +115,8 @@ export class CompanyModel {
             delete compObject.passwordPpdate_time;
 
         }
+        console.log("query: ",records);
+
         return records;
 
     }
@@ -191,7 +194,8 @@ export class CompanyModel {
         jobapplication.salarymin = salarymin;
         jobapplication.salarymax = salarymax;
 
-        return await connection.createEntityManager().insert(JobApplication, jobapplication);
+        await connection.createEntityManager().insert(JobApplication, jobapplication);
+        return jobapplication;
 
     }
     async disablejob(jobId: bigint) {
