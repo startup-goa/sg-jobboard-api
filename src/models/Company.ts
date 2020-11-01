@@ -71,10 +71,11 @@ export class CompanyModel {
 
         const queryB = connection.getRepository(JobApplication)
             .createQueryBuilder("jobapplication")
+            .innerJoinAndSelect("jobapplication.company", "company")
             .select([
                 "jobapplication.jobId as jobId",
                 "jobapplication.compId as compId",
-                "jobapplication.jobTitle as jobTitle" ,
+                "jobapplication.jobTitle as jobTitle",
                 "jobapplication.location as location",
                 "jobapplication.region as region",
                 "jobapplication.type as type",
@@ -84,7 +85,13 @@ export class CompanyModel {
                 "jobapplication.description as description",
                 "jobapplication.salarymin as salarymin",
                 "jobapplication.salarymax as salarymax",
-                "jobapplication.approved as approved"
+                "jobapplication.approved as approved",
+                "company.companyDispName as companyDispName",
+                "company.description as companydescription",
+                "company.website as website",
+                "company.logo as logo",
+
+
             ]);
         if (compId) {
             queryB.andWhere("jobapplication.compId = :compId", { compId });
@@ -97,7 +104,7 @@ export class CompanyModel {
         }
         queryB.offset((pageno - 1) * perpage)
             .limit(perpage);
-        return await connection
+        const records = await connection
             .createQueryBuilder()
             .from("(" + queryB.getQuery() + ")", "jobapplication")
             .setParameters(queryB.getParameters())
@@ -115,11 +122,22 @@ export class CompanyModel {
                 "jobapplication.salarymin",
                 "jobapplication.salarymax",
                 "jobapplication.approved",
+                "jobapplication.compId",
+                "jobapplication.companyDispName",
+                "jobapplication.companydescription",
+                "jobapplication.website",
+                "jobapplication.logo",
                 // "count(applications.applicantemail) as total_applications",
             ])
             // .groupBy("jobapplication.jobId")
             .getRawMany();
+        for (const compObject of records) {
+            if (compObject.logo) {
+                compObject.logo = path.join(process.env.BASE_URL, "company/logo", compObject.logo);
+            }
 
+        }
+        return records;
     }
     async getAllCompanies(pageno: number, perpage: number, approved: boolean) {
         const connection = getConnection(connectionName);
