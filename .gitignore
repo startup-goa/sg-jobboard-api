@@ -41,4 +41,6 @@ dist/**/*
 yarn.lock
 
 src/cvs 
+src/logos 
 dist/logos
+dist/cvs

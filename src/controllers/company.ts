@@ -9,7 +9,8 @@ import * as fs from "fs";
 const appDir = path.dirname(require.main.filename);
 const upload = multer({ dest: path.join(appDir, "/cvs") });
 const router = express.Router();
-const logoDirectory = path.join(appDir, "/cvs");
+const logoDirectory = path.join(appDir, "/logos");
+const cvDirectory = path.join(appDir, "/cvs");
 
 // get all companies which are approved or not approved or both
 router.get("/", async (req, res) => {
@@ -50,6 +51,16 @@ router.get("/logo/:filename", async (req, res) => {
     const companymodel = new CompanyModel();
     try {
         const filestream = fs.createReadStream(path.join(logoDirectory,filename));
+        filestream.pipe(res);
+    } catch (err) {
+        res.status(404).send("not found");
+    }
+});
+router.get("/cv/:filename", async (req, res) => {
+    const filename = req.params.filename;
+    const companymodel = new CompanyModel();
+    try {
+        const filestream = fs.createReadStream(path.join(cvDirectory,filename));
         filestream.pipe(res);
     } catch (err) {
         res.status(404).send("not found");
