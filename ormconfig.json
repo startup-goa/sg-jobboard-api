@@ -1,5 +1,5 @@
 [{
-        "name": "pgdev",
+        "name": "default",
         "type": "postgres",
         "host": "db-startup-goa-do-user-8243538-0.b.db.ondigitalocean.com",
         "port": 25060,
@@ -7,7 +7,7 @@
         "password": "m7hsxy55v5566t2d",
         "database": "startupgoaportal",
         "synchronize": false,
-        "logging": false,
+        "logging": true,
         "entities": [
             "src/entity/**/*.ts"
         ],
