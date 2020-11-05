@@ -157,4 +157,39 @@ router.get("/job/applications/:jobid" ,auth,async (req: any, res: express.Respon
     }
 });
 
+router.post('/api/company/job/apply', auth, async (req: any, res: express.Response) => {
+    try {
+        var application = {
+            jobTitle: req.jobTitle,
+            location: (!!req.body.location ? req.body.location : null),
+            jobRegion: req.body.jobRegion,
+            jobType: req.body.jobType,
+            jobCatgory: req.body.jobCatgory,
+            description: req.body.description,
+            application: req.body.application,
+            salaryRange: (!!req.body.salaryRange ? req.body.salaryRange : null),
+            verified: false,
+            active: true
+        }
+
+        //save application to db
+
+        res.status(200).send()
+    } catch (e) {
+        res.status(500).send("Something went wrong");
+    }
+})
+
+router.get('/api/company/verify/:email', auth, async (req: any, res: express.Response) => {
+    try {
+        var email = req.params.email
+
+        //check db to verify return boolean
+
+        res.status(200).send()
+    } catch (e) {
+        res.status(500).send("Something went wrong");
+    }
+})
+
 export {router as companyRouter };
