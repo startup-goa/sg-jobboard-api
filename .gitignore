@@ -44,3 +44,7 @@ src/cvs
 src/logos 
 dist/logos
 dist/cvs
+
+ca-certificate_2.crt 
+private.key 
+public.key
