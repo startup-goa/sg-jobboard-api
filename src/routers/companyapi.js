@@ -87,5 +87,14 @@ router.post('/getapplication', auth, async (req, res) => {
     }
 })
 
+router.post('/api/company/job/apply', auth, async (req, res) => {
+    try {
+        const jobs = await getJob(_id)
+        res.status(200).send(jobs)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 
 module.exports = router
