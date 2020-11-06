@@ -1,5 +1,4 @@
 import * as express from "express";
-import { Auth } from "../models/Auth";
 import { auth } from "../middleware/auth";
 import { CompanyModel } from "../models/Company";
 import multer from "multer";
@@ -90,7 +89,7 @@ router.get("/cv/:filename", async (req, res) => {
 
 
 router.post("/job",auth ,async (req: any, res: express.Response) => {
-    const compId = req.user["compId"] as number;
+    const compId = req.user["id"] as number;
     const type = req.query.type;
     const companymodel = new CompanyModel();
     try {
@@ -109,7 +108,7 @@ router.post("/job",auth ,async (req: any, res: express.Response) => {
         res.send({
             job: jobobject
         });
-    } catch (err) {
+    } catch (err) {console.log(err);
         res.send("Something went wrong");
     }
 });
@@ -128,7 +127,8 @@ router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Resp
             req.body.email,
             filecv,
             req.body.message,
-            req.body.fullname
+            req.body.fullname,
+            req.body.phonenumber
         );
         res.send({
             applicationDetails: jobobject
@@ -138,7 +138,7 @@ router.post("/job/apply",upload.single("cv") ,async (req: any, res: express.Resp
     }
 });
 router.get("/job/applications/:jobid" ,auth,async (req: any, res: express.Response) => {
-    const compId = req.user["compId"] as number;
+    const compId = req.user["id"] as number;
     const companymodel = new CompanyModel();
     const pageno = req.query.pageno || 1;
     const perpage = req.query.perpage || 20;

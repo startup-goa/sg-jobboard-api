@@ -1,11 +1,10 @@
 import * as express from "express";
-import { AuthRoutes } from "./auth";
+import { CompanyAuthRoutes } from "./companyauth";
 import { companyRouter } from "./company";
 import { companyadminRouter } from "./companyadmin";
 
 const router = express.Router();
-router.use("/company/auth",AuthRoutes);
-router.use("/company/logo",AuthRoutes);
+router.use("/company/auth",CompanyAuthRoutes);
 router.use("/company/",companyRouter);
 router.use("/admin/company/",companyadminRouter);
 

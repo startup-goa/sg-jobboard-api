@@ -7,7 +7,7 @@
         "password": "m7hsxy55v5566t2d",
         "database": "startupgoaportal",
         "synchronize": false,
-        "logging": true,
+        "logging": false,
         "entities": [
             "src/entity/**/*.ts"
         ],

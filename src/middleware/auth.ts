@@ -10,7 +10,7 @@ const auth = async (req: express.Request, res: express.Response, next: express.N
         if (req.headers.authorization == null) {
             //no token 
             // next(new Error("Authorization Error"));
-            return res.status(401).send("Not Auth");
+            return res.status(401).send("Auth token not present in header, include header authorization");
 
             return;
         }

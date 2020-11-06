@@ -1,10 +1,11 @@
 import * as express from "express";
-import { Auth } from "../models/Auth";
+import { Authfactory, AuthCompany } from "../models/Auth";
 import { auth } from "../middleware/auth";
 import { CompanyModel } from "../models/Company";
 import multer from "multer";
 import path = require("path");
 import * as bodyParser from "body-parser";
+import { Constants } from "../util/constants";
 const appDir = path.dirname(require.main.filename);
 const upload = multer({ dest: path.join(appDir, "/logos") });
 const router = express.Router();
@@ -15,25 +16,24 @@ router.get("/", function (req, res) {
 
 router.post("/login",
     async (req: express.Request, res: express.Response) => {
-
-        
         try {
-            const auth: Auth = new Auth(req.body.username, req.body.password);
+
+            const auth: AuthCompany = Authfactory.getInstance(req.body.username, req.body.password, Constants.UTYPE_COMPANY) as AuthCompany;
             const companyobj = await auth.login();
             delete companyobj.password;
             delete companyobj.passwordPpdate_time;;
 
-            const token = await auth.getToken(companyobj);
+            const token = await auth.getToken(companyobj.compId, companyobj.companyName, Constants.UTYPE_COMPANY);
             if (token == null) {
                 res.status(500).send("Token generation failed");
             } else {
-                
+
                 res.status(200).send({
                     token: token,
                     company: companyobj
                 });
             }
-        } catch (err) {
+        } catch (err) {console.log(err);
             res.status(500).send({ error: "some error" });
         }
     });
@@ -48,7 +48,7 @@ router.post("/signup", upload.single("logo"),
 
         try {
             const companymodelObj = new CompanyModel();
-            await companymodelObj.createCompany(
+            const companyObj = await companymodelObj.createCompany(
                 req.body.companyUserName,
                 req.body.companyDispName,
                 req.body.phoneNumber,
@@ -61,8 +61,18 @@ router.post("/signup", upload.single("logo"),
                 filelogo,
                 req.body.password
             );
+            delete companyObj.password;
+            delete companyObj.passwordPpdate_time;
+            res.status(201).send({ message: "Company created",data: companyObj });
+
         } catch (err) {
-            res.status(500).send({ error: "some error, please pass all params" });
+            if (err.code == Constants.DB_ERROR_DUPLICATE) {
+                res.status(422).send({ error: "Company already Exists" });
+
+            }else{
+                res.status(500).send({ error: "some error, please pass all params" });
+
+            }
 
         }
     });
@@ -75,7 +85,7 @@ router.post("/signup", upload.single("logo"),
 //         res.status(500).send();
 //     }
 // });
-export { router as AuthRoutes };
+export { router as CompanyAuthRoutes };
 
 
 

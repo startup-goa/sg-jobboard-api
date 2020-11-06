@@ -1,10 +1,7 @@
 import * as express from "express";
-import { Auth } from "../models/Auth";
-import { auth } from "../middleware/auth";
 import { CompanyModel } from "../models/Company";
 import multer from "multer";
 import path = require("path");
-import * as bodyParser from "body-parser";
 const appDir = path.dirname(require.main.filename);
 const upload = multer({ dest: path.join(appDir, "/logos") });
 const router = express.Router();

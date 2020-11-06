@@ -35,7 +35,8 @@ export class CompanyModel {
         companyObj.logo = logo;
         const hash = await bcrypt.hash(password, saltRounds);
         companyObj.password = hash;
-        return await connection.createEntityManager().insert(Company, companyObj);
+        await connection.createEntityManager().insert(Company, companyObj);
+        return companyObj;
     }
     async getCompany(compId: number) {
         const connection = getConnection(connectionName);
@@ -263,7 +264,8 @@ export class CompanyModel {
         applicantemail: string,
         cvPath: string,
         applicantmessage: string,
-        applicantfullName: string
+        applicantfullName: string,
+        phonenumber: string
     ) {
         const applicationobj = new Applications();
         applicationobj.jobId = jobId;
@@ -271,6 +273,7 @@ export class CompanyModel {
         applicationobj.cvPath = cvPath;
         applicationobj.applicantmessage = applicantmessage;
         applicationobj.applicantfullName = applicantfullName;
+        applicationobj.phonenumber = phonenumber;
         const connection = getConnection(connectionName);
         await connection.createEntityManager().insert(Applications, applicationobj);
         return applicationobj;

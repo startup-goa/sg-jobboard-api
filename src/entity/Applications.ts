@@ -24,9 +24,13 @@ export class Applications {
     jobApplication: JobApplication;
 
 
-    @Column({type: "varchar", length: 1000,nullable: false})
+    @Column({type: "varchar", length: 1000,nullable: true})
     cvPath: string;
+
+    @Column({type: "varchar", length: 15,nullable: false})
+    phonenumber: string;
     
+
     @Column({type: "boolean",default:true})
     active: boolean;
 
