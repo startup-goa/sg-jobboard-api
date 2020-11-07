@@ -155,7 +155,7 @@ export class CompanyModel {
         }
         if(email){
             query.andWhere(
-                "company.email = :email", { email }
+                "company.companyEmail = :email", { email }
             );
         }
         query.skip((pageno-1)*perpage)

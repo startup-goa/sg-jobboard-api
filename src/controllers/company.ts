@@ -19,12 +19,12 @@ router.get("/", async (req, res) => {
     const companymodel = new CompanyModel();
     try {
         const companyList = await companymodel.getAllCompanies(
-            1, 1, approved
+            1, 1, approved,email
         );console.log("companyList: ",companyList);
         res.send({
             companyList
         });
-    } catch (err) {
+    } catch (err) {console.log(err);
         res.status(500).send("Something went wrong");
     }
 });
