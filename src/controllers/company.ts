@@ -15,6 +15,7 @@ const cvDirectory = path.join(appDir, "/cvs");
 router.get("/", async (req, res) => {
     const pageno = 1;
     const approved = true;
+    const email = req.query.email;
     const companymodel = new CompanyModel();
     try {
         const companyList = await companymodel.getAllCompanies(
@@ -103,7 +104,9 @@ router.post("/job",auth ,async (req: any, res: express.Response) => {
             req.body.phonenumber,
             req.body.desc,
             req.body.salarymin,
-            req.body.salarymax
+            req.body.salarymax,
+            req.body.experiencemin,
+            req.body.experiencemax,
         );
         res.send({
             job: jobobject

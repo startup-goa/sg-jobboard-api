@@ -59,7 +59,8 @@ router.post("/signup", upload.single("logo"),
                 req.body.facebookPage,
                 req.body.linkedinPage,
                 filelogo,
-                req.body.password
+                req.body.password,
+                req.body.email
             );
             delete companyObj.password;
             delete companyObj.passwordPpdate_time;

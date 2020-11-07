@@ -17,6 +17,9 @@ export class Company {
     companyName: string;
 
     @Column({type: "varchar", length: 200, unique: true ,nullable: false})
+    companyEmail: string;
+
+    @Column({type: "varchar", length: 200, unique: true ,nullable: false})
     companyDispName: string;
 
     @Column({type:"varchar",length:15})
@@ -57,7 +60,6 @@ export class Company {
 
     @OneToMany(type => JobApplication,aobApplication => aobApplication.company)
     jobApplications: JobApplication[];
-
 
     @CreateDateColumn()
     createdDate: Date;

@@ -56,7 +56,10 @@ export class JobApplication {
     @OneToMany(type => Applications,applications => applications.jobApplication)
     applications: Applications[];
 
-
+    @Column({type:"double precision", default: 0})
+    experiencemin: number;
+    @Column({type:"double precision", default: 0})
+    experiencemax: number;
 
     @CreateDateColumn()
     createdDate: Date;

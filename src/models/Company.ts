@@ -19,7 +19,8 @@ export class CompanyModel {
         facebookPage: string,
         linkedinPage: string,
         logo: string,
-        password: string
+        password: string,
+        email:string
     ) {
         const connection = getConnection(connectionName);
         const companyObj = new Company();
@@ -33,6 +34,7 @@ export class CompanyModel {
         companyObj.facebookPage = facebookPage;
         companyObj.linkedinPage = linkedinPage;
         companyObj.logo = logo;
+        companyObj.companyEmail = email;
         const hash = await bcrypt.hash(password, saltRounds);
         companyObj.password = hash;
         await connection.createEntityManager().insert(Company, companyObj);
@@ -140,7 +142,7 @@ export class CompanyModel {
         }
         return records;
     }
-    async getAllCompanies(pageno: number, perpage: number, approved: boolean) {
+    async getAllCompanies(pageno: number=1, perpage: number = 30, approved: boolean, email?:string) {
         const connection = getConnection(connectionName);
         const query = connection.getRepository(Company)
             .createQueryBuilder("company");
@@ -151,6 +153,13 @@ export class CompanyModel {
                 "company.approved = :approved", { approved }
             );
         }
+        if(email){
+            query.andWhere(
+                "company.email = :email", { email }
+            );
+        }
+        query.skip((pageno-1)*perpage)
+        .take(perpage);
         const records = await query.getMany();
         for (const compObject of records) {
             if (compObject.logo) {
@@ -224,6 +233,8 @@ export class CompanyModel {
         description: string,
         salarymin: number,
         salarymax: number,
+        experiencemin: number,
+        experiencemax: number
 
     ) {
         const connection = getConnection(connectionName);
@@ -238,6 +249,8 @@ export class CompanyModel {
         jobapplication.description = description;
         jobapplication.salarymin = salarymin;
         jobapplication.salarymax = salarymax;
+        jobapplication.experiencemin = experiencemin;
+        jobapplication.experiencemax = experiencemax;
 
         await connection.createEntityManager().insert(JobApplication, jobapplication);
         return jobapplication;
